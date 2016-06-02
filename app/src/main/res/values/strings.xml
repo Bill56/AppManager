@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">AppManager</string>
+    <string name="item_app_name_hint">iQiyi</string>
+    <string name="item_app_size_hint">27.11MB</string>
+    <string name="activity_tab_all">All</string>
+    <string name="activity_tab_running">Running</string>
+    <string name="activity_toast_quit">Please press again for quition</string>
+    <string name="frag_list_app_empty_hint">No Applications</string>
+    <string name="activity_main_option_search_file">Search</string>
+    <string name="activity_main_option_sort_file">Sort</string>
+    <string name="activity_main_option_sort_all">All Apps</string>
+    <string name="activity_main_option_sort_system">System Apps</string>
+    <string name="activity_main_option_sort_user">User Apps</string>
+    <string name="activity_main_search_title">Please input app name</string>
+</resources>

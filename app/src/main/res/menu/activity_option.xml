@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- 搜索 -->
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_24dp"
+        android:title="@string/activity_main_option_search_file"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="always" />
+    <!-- 排序组-->
+    <item
+        android:id="@+id/action_sort"
+        android:icon="@drawable/ic_sort_24dp"
+        android:title="@string/activity_main_option_sort_file"
+        app:showAsAction="always">
+        <!--子菜单-->
+        <menu>
+            <group
+                android:id="@+id/group_sort"
+                android:checkableBehavior="single"><!--单选行为-->
+                <item
+                    android:id="@+id/action_sort_all"
+                    android:title="@string/activity_main_option_sort_all" />
+                <item
+                    android:id="@+id/action_sort_system"
+                    android:title="@string/activity_main_option_sort_system" />
+                <item
+                    android:id="@+id/action_sort_user"
+                    android:title="@string/activity_main_option_sort_user" />
+            </group>
+        </menu>
+    </item>
+
+</menu>
