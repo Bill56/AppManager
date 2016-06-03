@@ -14,4 +14,7 @@
     <string name="activity_main_search_title">Please input app name</string>
     <string name="frag_app_running_available">available:</string>
     <string name="frag_app_running_total">total:</string>
+    <string name="activity_main_option_use_histoty">Using History</string>
+    <string name="activity_main_waiting">Loading...\\nWait for now</string>
+    <string name="activity_main_waiting_title">waiting</string>
 </resources>

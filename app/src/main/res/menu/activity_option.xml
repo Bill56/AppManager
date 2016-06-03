@@ -9,6 +9,12 @@
         android:title="@string/activity_main_option_search_file"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always" />
+    <!-- 历史使用记录 -->
+    <item
+        android:id="@+id/action_use_history"
+        android:icon="@drawable/ic_restore_24dp"
+        android:title="@string/activity_main_option_use_histoty"
+        app:showAsAction="always" />
     <!-- 排序组-->
     <item
         android:id="@+id/action_sort"

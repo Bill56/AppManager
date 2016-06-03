@@ -1,7 +1,10 @@
 package com.bill56.appmanager.fragment;
 
+import android.app.ProgressDialog;
 import android.content.pm.ApplicationInfo;
 import android.support.v4.app.Fragment;
+
+import com.bill56.appmanager.R;
 
 /**
  * Created by Bill56 on 2016/6/3.
@@ -25,5 +28,7 @@ public class BaseFragment extends Fragment {
         }
         return false;
     }
+
+
 
 }

@@ -1,5 +1,7 @@
 package com.bill56.appmanager.activity;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -49,10 +51,13 @@ public class MainActivity extends BaseActivity {
     private ListView appList;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // 初始化导航
         initTab();
     }
 
@@ -142,6 +147,9 @@ public class MainActivity extends BaseActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                break;
+            case R.id.action_use_history:
+                startActivity(new Intent(this,UsingHistoyActivity.class));
                 break;
             case R.id.action_sort_all:
                 doSortAll();
