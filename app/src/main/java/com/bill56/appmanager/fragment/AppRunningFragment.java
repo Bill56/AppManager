@@ -12,13 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bill56.appmanager.R;
 import com.bill56.appmanager.adapter.AppInfoAdapter;
 import com.bill56.appmanager.entity.AppInfo;
 import com.bill56.appmanager.entity.PackagesInfo;
+import com.bill56.appmanager.util.AppUtil;
 import com.bill56.appmanager.util.DateTimeUtil;
+import com.bill56.appmanager.util.DeviceUtil;
 import com.bill56.appmanager.util.LogUtil;
 
 import java.util.ArrayList;
@@ -30,7 +33,7 @@ import java.util.Map;
 /**
  * Created by Bill56 on 2016/5/30.
  */
-public class AppRunningFragment extends Fragment {
+public class AppRunningFragment extends BaseFragment {
 
     // 上下文环境
     private Context mContext;
@@ -43,6 +46,16 @@ public class AppRunningFragment extends Fragment {
     // 数据
     private List<AppInfo> runningAppInfos;
 
+    // 本身实例
+    private static AppRunningFragment instance;
+
+    // 可用大小
+    private TextView textValibelSize;
+    // 总大小
+    private TextView textTotalSize;
+    // 进度框
+    private ProgressBar progressSizePer;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -50,11 +63,36 @@ public class AppRunningFragment extends Fragment {
         LogUtil.d(LogUtil.TAG, mContext == null ? "null" : "not null");
     }
 
+    public static AppRunningFragment getInstance() {
+        if (instance == null)
+            instance = new AppRunningFragment();
+        return instance;
+    }
+
+    /**
+     * 获得数据列表
+     *
+     * @return 数据列表
+     */
+    public List<AppInfo> getAppData() {
+        return runningAppInfos;
+    }
+
+    /**
+     * 获得应用列表控件
+     *
+     * @return
+     */
+    public ListView getListApps() {
+        return listApps;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_apps, container, false);
+        View v = inflater.inflate(R.layout.fragment_app_running, container, false);
         initList(v);
+        caculateRomSize(v);
         return v;
     }
 
@@ -74,33 +112,33 @@ public class AppRunningFragment extends Fragment {
         listApps.setEmptyView(v.findViewById(R.id.ll_app_list_empty));
     }
 
+    /**
+     * 计算机身存储的百分比
+     *
+     * @param v 视图
+     */
+    private void caculateRomSize(View v) {
+        // 初始化控件
+        textValibelSize = (TextView) v.findViewById(R.id.text_show_valible);
+        textTotalSize = (TextView) v.findViewById(R.id.text_show_total);
+        progressSizePer = (ProgressBar) v.findViewById(R.id.progress_size_percent);
+        long availibel = DeviceUtil.getRomAvailableSize();
+        long total = DeviceUtil.getRomTotalSize();
+        // 设置显示
+        textValibelSize.setText(getString(R.string.frag_app_running_available) + AppUtil.longSizeToStrSize(mContext, availibel));
+        textTotalSize.setText(getString(R.string.frag_app_running_total) + AppUtil.longSizeToStrSize(mContext, total));
+        // 设置进度条
+        progressSizePer.setProgress((int) (100 - availibel * 100 / total));
+    }
 
 
     /**
      * 获取正在运行的应用程序
      */
     public void getRunningAppsInfo() {
-//        PackagesInfo pi = new PackagesInfo(mContext);
-//
-
-//        //获取正在运行的应用
-//        List<ActivityManager.RunningAppProcessInfo> run = am.getRunningAppProcesses();
-//        //获取包管理器，在这里主要通过包名获取程序的图标和程序名
-
-//        List<AppInfo> list = new ArrayList<AppInfo>();
-//
-//        for(ActivityManager.RunningAppProcessInfo  ra : run) {
-//            // AppInfo pr = new AppInfo();
-//            LogUtil.d(LogUtil.TAG,ra.processName);
-////            pr.setAppIcon(pi.getInfo(ra.processName).loadIcon(pm));
-////            pr.setAppName(pi.getInfo(ra.processName).loadLabel(pm).toString());
-////            pr.setAppSize(112234);
-////            System.out.println(pi.getInfo(ra.processName).loadLabel(pm).toString());
-////            list.add(pr);
-//        }
-//        runningAppInfos = list;
+        // 获得包管理器
         PackageManager pm = mContext.getPackageManager();
-                ActivityManager am = (ActivityManager) mContext.getSystemService(mContext.ACTIVITY_SERVICE);
+        ActivityManager am = (ActivityManager) mContext.getSystemService(mContext.ACTIVITY_SERVICE);
         // 查询所有已经安装的应用程序
         List<ApplicationInfo> listAppcations = pm.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
         // 排序
@@ -139,6 +177,7 @@ public class AppRunningFragment extends Fragment {
                 runningApp.setAppIcon(app.loadIcon(pm));
                 runningApp.setAppName(app.loadLabel(pm).toString());
                 runningApp.setAppPackageName(app.packageName);
+                runningApp.setIsUserApp(filterApp(app));
                 // 获得占用的内存大小
                 Debug.MemoryInfo[] memoryInfo = am.getProcessMemoryInfo(new int[]{pid});
                 long memSize = memoryInfo[0].dalvikPrivateDirty;
@@ -147,5 +186,7 @@ public class AppRunningFragment extends Fragment {
             }
         }
     }
+
+
 
 }

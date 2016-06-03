@@ -10,6 +10,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.bill56.appmanager.R;
@@ -17,6 +18,8 @@ import com.bill56.appmanager.adapter.AppInfoAdapter;
 import com.bill56.appmanager.entity.AppInfo;
 import com.bill56.appmanager.fragment.AppAllFragment;
 import com.bill56.appmanager.fragment.AppRunningFragment;
+import com.bill56.appmanager.fragment.BaseFragment;
+import com.bill56.appmanager.util.LogUtil;
 import com.bill56.appmanager.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -35,11 +38,13 @@ public class MainActivity extends BaseActivity {
     private ViewPager viewPagerNext;
     // 导航适配器
     private TabAdaper tabAdaper;
+    // 当前的碎片
+    Fragment currentFragment;
     // 记录按下back键后的毫秒数
     private long lastBackPressed;
 
     // 设备安装的所有应用程序列表
-    private List<AppInfo> apps ;
+    private List<AppInfo> apps;
     // 设备安装程序的适配器
     private ListView appList;
 
@@ -71,8 +76,9 @@ public class MainActivity extends BaseActivity {
 
     /**
      * 加载选项菜单
-     * @param menu  菜单对象
-     * @return  true表示不需要提交给父布局
+     *
+     * @param menu 菜单对象
+     * @return true表示不需要提交给父布局
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,7 +115,8 @@ public class MainActivity extends BaseActivity {
 
     /**
      * 当选项菜单被选中的时候执行
-     * @param item  选中的菜单项
+     *
+     * @param item 选中的菜单项
      * @return
      */
     @Override
@@ -118,10 +125,20 @@ public class MainActivity extends BaseActivity {
             // 设为选中
             item.setChecked(true);
         }
-        // 获得列表
-        apps = AppAllFragment.getInstance().getAppData();
-        // 获得应用列表
-        appList = AppAllFragment.getInstance().getListApps();
+        // 判断当前是哪个碎片
+        if (currentFragment instanceof  AppAllFragment) {
+            // 获得列表
+            apps = AppAllFragment.getInstance().getAppData();
+            // 获得应用列表
+            appList = AppAllFragment.getInstance().getListApps();
+        } else /*if (currentFragment instanceof AppRunningFragment)*/ {
+            // 获得列表
+            apps = AppRunningFragment.getInstance().getAppData();
+            LogUtil.d(LogUtil.TAG,apps == null?"null":"not null");
+            // 获得应用列表
+            appList = AppRunningFragment.getInstance().getListApps();
+        }
+
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
@@ -147,11 +164,11 @@ public class MainActivity extends BaseActivity {
     private void doSortUser() {
         List<AppInfo> userApp = new ArrayList<>();
         // 遍历所有app
-        for (AppInfo app :apps) {
-            if(app.isUserApp())
+        for (AppInfo app : apps) {
+            if (app.isUserApp())
                 userApp.add(app);
         }
-        appList.setAdapter(new AppInfoAdapter(this,userApp));
+        appList.setAdapter(new AppInfoAdapter(this, userApp));
     }
 
     /**
@@ -160,20 +177,19 @@ public class MainActivity extends BaseActivity {
     private void doSortSystem() {
         List<AppInfo> systemApp = new ArrayList<>();
         // 遍历所有app
-        for (AppInfo app :apps) {
-            if(!app.isUserApp())
+        for (AppInfo app : apps) {
+            if (!app.isUserApp())
                 systemApp.add(app);
         }
-        appList.setAdapter(new AppInfoAdapter(this,systemApp));
+        appList.setAdapter(new AppInfoAdapter(this, systemApp));
     }
 
     /**
      * 获得所有app
      */
     private void doSortAll() {
-        appList.setAdapter(new AppInfoAdapter(this,apps));
+        appList.setAdapter(new AppInfoAdapter(this, apps));
     }
-
 
 
     /**
@@ -189,8 +205,9 @@ public class MainActivity extends BaseActivity {
             super(fm);
             // 获得应用列表实例
             AppAllFragment appAllFg = AppAllFragment.getInstance();
+            AppRunningFragment runningFragment = AppRunningFragment.getInstance();
             fragmentList.add(appAllFg);
-            fragmentList.add(new AppRunningFragment());
+            fragmentList.add(runningFragment);
 //            fragmentList.add(new TechFragment());
         }
 
@@ -208,6 +225,19 @@ public class MainActivity extends BaseActivity {
         public int getCount() {
             return fragmentList.size();
         }
+
+        /**
+         * 获得当前的碎片实例
+         *
+         * @param container
+         * @param position
+         * @param object
+         */
+        @Override
+        public void setPrimaryItem(ViewGroup container, int position, Object object) {
+            currentFragment = (BaseFragment) object;
+            super.setPrimaryItem(container, position, object);
+        }
     }
 
     /**
@@ -220,7 +250,7 @@ public class MainActivity extends BaseActivity {
         if (currentTime - lastBackPressed < 2000) {
             super.onBackPressed();
         } else {
-            ToastUtil.show(this,R.string.activity_toast_quit);
+            ToastUtil.show(this, R.string.activity_toast_quit);
         }
         lastBackPressed = currentTime;
     }

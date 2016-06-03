@@ -12,6 +12,6 @@
     <string name="activity_main_option_sort_system">System Apps</string>
     <string name="activity_main_option_sort_user">User Apps</string>
     <string name="activity_main_search_title">Please input app name</string>
-    <string name="activity_main_navi_history">Using History</string>
-    <string name="atcivity_main_navi_top_nick">User Nick</string>
+    <string name="frag_app_running_available">available:</string>
+    <string name="frag_app_running_total">total:</string>
 </resources>

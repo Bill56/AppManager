@@ -11,12 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bill56.appmanager.R;
 import com.bill56.appmanager.adapter.AppInfoAdapter;
 import com.bill56.appmanager.entity.AppInfo;
+import com.bill56.appmanager.util.AppUtil;
 import com.bill56.appmanager.util.DateTimeUtil;
+import com.bill56.appmanager.util.DeviceUtil;
 import com.bill56.appmanager.util.LogUtil;
 
 import java.io.File;
@@ -27,7 +30,7 @@ import java.util.List;
  * 加载所有应用的碎片
  * Created by Bill56 on 2016/5/30.
  */
-public class AppAllFragment extends Fragment {
+public class AppAllFragment extends BaseFragment {
 
     // 上下文环境
     private Context mContext;
@@ -42,6 +45,12 @@ public class AppAllFragment extends Fragment {
 
     private static AppAllFragment instance;
 
+    // 可用大小
+    private TextView textValibelSize;
+    // 总大小
+    private TextView textTotalSize;
+    // 进度框
+    private ProgressBar progressSizePer;
 
     @Override
     public void onAttach(Context context) {
@@ -84,6 +93,8 @@ public class AppAllFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_apps, container, false);
         initList(v);
+        // 计算机身存储百分比
+//        caculateRomSize(v);
         return v;
     }
 
@@ -101,6 +112,24 @@ public class AppAllFragment extends Fragment {
         appAdapter = new AppInfoAdapter(mContext, appData);
         listApps.setAdapter(appAdapter);
         listApps.setEmptyView(v.findViewById(R.id.ll_app_list_empty));
+    }
+
+    /**
+     * 计算机身存储的百分比
+     * @param v 视图
+     */
+    private void caculateRomSize(View v) {
+        // 初始化控件
+        textValibelSize = (TextView) v.findViewById(R.id.text_show_valible);
+        textTotalSize = (TextView) v.findViewById(R.id.text_show_total);
+        progressSizePer = (ProgressBar) v.findViewById(R.id.progress_szie_percent);
+        long availibel = DeviceUtil.getSDAvailableSize();
+        long total = DeviceUtil.getSDTotalSize();
+        // 设置显示
+        textValibelSize.setText(getString(R.string.frag_app_running_available)+ AppUtil.longSizeToStrSize(mContext,availibel));
+        textTotalSize.setText(getString(R.string.frag_app_running_total) + AppUtil.longSizeToStrSize(mContext,total));
+        // 设置进度条
+        progressSizePer.setProgress((int) (availibel*100/total));
     }
 
     private void getAppsInfo() {
@@ -131,24 +160,5 @@ public class AppAllFragment extends Fragment {
             appData.add(app);
         }
     }
-
-    /**
-     * 三方应用程序的过滤器
-     *
-     * @param info 应用信息
-     * @return true 三方应用 false 系统应用
-     */
-
-    public boolean filterApp(ApplicationInfo info) {
-        if ((info.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
-            // 代表的是系统的应用,但是被用户升级了. 用户应用
-            return true;
-        } else if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
-            // 代表的用户的应用
-            return true;
-        }
-        return false;
-    }
-
 
 }
