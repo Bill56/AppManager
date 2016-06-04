@@ -21,6 +21,7 @@ import com.bill56.appmanager.entity.AppInfo;
 import com.bill56.appmanager.fragment.AppAllFragment;
 import com.bill56.appmanager.fragment.AppRunningFragment;
 import com.bill56.appmanager.fragment.BaseFragment;
+import com.bill56.appmanager.service.LongRunningService;
 import com.bill56.appmanager.util.LogUtil;
 import com.bill56.appmanager.util.ToastUtil;
 
@@ -59,6 +60,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         // 初始化导航
         initTab();
+        startService(new Intent(this, LongRunningService.class));
     }
 
     /**

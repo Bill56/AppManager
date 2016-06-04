@@ -23,6 +23,12 @@
         <activity android:name=".activity.UsingHistoyActivity">
 
         </activity>
+        <service android:name=".service.LongRunningService">
+
+        </service>
+        <receiver android:name=".broadcastreciever.AlarmReceiver">
+
+        </receiver>
     </application>
 
 </manifest>

@@ -42,7 +42,7 @@ public class UsingHistoyActivity extends BaseActivity {
         calendarUsing.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                ToastUtil.show(UsingHistoyActivity.this,String.format("%d-%d-%d",year,month,dayOfMonth));
+                ToastUtil.show(UsingHistoyActivity.this,String.format("%d-%d-%d",year,month+1,dayOfMonth));
             }
         });
 

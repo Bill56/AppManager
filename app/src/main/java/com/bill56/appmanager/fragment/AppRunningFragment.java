@@ -184,6 +184,4 @@ public class AppRunningFragment extends BaseFragment {
         }
     }
 
-
-
 }
