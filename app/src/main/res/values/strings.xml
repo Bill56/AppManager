@@ -17,4 +17,9 @@
     <string name="activity_main_option_use_histoty">Using History</string>
     <string name="activity_main_waiting">Loading...\\nWait for now</string>
     <string name="activity_main_waiting_title">waiting</string>
+    <string name="app_days">day</string>
+    <string name="app_hours">hour</string>
+    <string name="app_minutes">minute</string>
+    <string name="app_second">scond</string>
+    <string name="frag_adapter_error">Get Error</string>
 </resources>

@@ -18,8 +18,10 @@ public class AppInfo {
     private long appSize;
     // 应用所占用的内存
     private long appUseROM;
+    // 应用安装时间
+
     // 应用所使用的时间
-    private long appUserTime;
+    private long appInstalTime;
     // 应用启动的次数
     private int appstartFrequency;
     //应用的类型,true表示用户，false表示系统
@@ -73,12 +75,12 @@ public class AppInfo {
         this.appUseROM = appUseROM;
     }
 
-    public long getAppUserTime() {
-        return appUserTime;
+    public long getAppInstalTime() {
+        return appInstalTime;
     }
 
-    public void setAppUserTime(long appUserTime) {
-        this.appUserTime = appUserTime;
+    public void setAppInstalTime(long appInstalTime) {
+        this.appInstalTime = appInstalTime;
     }
 
     public int getAppstartFrequency() {

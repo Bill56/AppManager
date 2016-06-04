@@ -125,9 +125,9 @@ public class AppAllFragment extends BaseFragment {
         long total = DeviceUtil.getSDTotalSize();
         // 设置显示
         textValibelSize.setText(getString(R.string.frag_app_running_available)+ AppUtil.longSizeToStrSize(mContext,availibel));
-        textTotalSize.setText(getString(R.string.frag_app_running_total) + AppUtil.longSizeToStrSize(mContext,total));
+        textTotalSize.setText(getString(R.string.frag_app_running_total) + AppUtil.longSizeToStrSize(mContext, total));
         // 设置进度条
-        progressSizePer.setProgress((int) (availibel*100/total));
+        progressSizePer.setProgress((int) (availibel * 100 / total));
     }
 
     private void getAppsInfo() {
@@ -154,6 +154,8 @@ public class AppAllFragment extends BaseFragment {
             app.setAppSize(apk.length());
             // 设置应用类型是否为用户下载应用
             app.setIsUserApp(filterApp(pack.applicationInfo));
+            app.setAppInstalTime(pack.firstInstallTime);
+            LogUtil.d(LogUtil.TAG, app.getAppName() + " : " + DateTimeUtil.DateToDetailString(app.getAppInstalTime()));
             // 添加到列表
             appData.add(app);
         }

@@ -19,7 +19,7 @@ import java.util.List;
  * App显示列表的适配器
  * Created by Bill56 on 2016/5/30.
  */
-public class AppInfoAdapter extends BaseAdapter {
+public class AppRunningAdapter extends BaseAdapter {
 
     // 上下文
     private Context mContext;
@@ -34,7 +34,7 @@ public class AppInfoAdapter extends BaseAdapter {
      * @param context   上下文
      * @param data  数据
      */
-    public AppInfoAdapter(Context context, List<AppInfo> data) {
+    public AppRunningAdapter(Context context, List<AppInfo> data) {
         this.mContext = context;
         this.mData = data;
         // 加载布局的服务对象

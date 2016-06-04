@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.CalendarView;
 
 import com.bill56.appmanager.R;
+import com.bill56.appmanager.util.ToastUtil;
 
 /**
  * 使用的历史记录的活动，以日历表的形式给出
@@ -38,7 +39,13 @@ public class UsingHistoyActivity extends BaseActivity {
     private void initCalendar() {
         // 绑定日历控件
         calendarUsing = (CalendarView) findViewById(R.id.calendar_using);
-        
+        calendarUsing.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                ToastUtil.show(UsingHistoyActivity.this,String.format("%d-%d-%d",year,month,dayOfMonth));
+            }
+        });
+
     }
 
     @Override
