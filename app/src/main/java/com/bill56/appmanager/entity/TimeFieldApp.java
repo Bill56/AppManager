@@ -11,6 +11,10 @@ public class TimeFieldApp {
     private int appNumber;
     // app启动次数
     private int appStrupNumber;
+    // 锁屏次数
+    private int screenOff;
+    // 使用时长
+    private int useTime;
 
     public String getTime() {
         return time;
@@ -36,12 +40,31 @@ public class TimeFieldApp {
         this.appStrupNumber = appStrupNumber;
     }
 
+    public int getScreenOff() {
+        return screenOff;
+    }
+
+    public void setScreenOff(int screenOff) {
+        this.screenOff = screenOff;
+    }
+
+    public int getUseTime() {
+        return useTime;
+    }
+
+    public void setUseTime(int useTime) {
+        this.useTime = useTime;
+    }
+
     @Override
     public String toString() {
         return "TimeFieldApp{" +
                 "time='" + time + '\'' +
                 ", appNumber=" + appNumber +
                 ", appStrupNumber=" + appStrupNumber +
+                ", screenOff=" + screenOff +
+                ", useTime=" + useTime +
                 '}';
     }
+
 }

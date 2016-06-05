@@ -43,48 +43,66 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
             android:layout_height="0dp"
+            android:layout_weight="1"
             android:gravity="center"
-            android:layout_weight="1">
-            <TextView
-                android:layout_width="0dp"
-                android:gravity="center"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/activity_using_detail_time"
-                android:id="@+id/tex_time_desc" />
+            android:orientation="horizontal">
 
             <TextView
-                android:gravity="center"
+                android:id="@+id/tex_time_desc"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/activity_using_detail_app_number"
-                android:id="@+id/text_app_number_desc" />
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/activity_using_detail_time" />
 
             <TextView
+                android:id="@+id/text_app_number_desc"
                 android:layout_width="0dp"
-                android:gravity="center"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/activity_using_detail_app_strup"
-                android:id="@+id/text_app_strup_desc" />
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/activity_using_detail_app_number" />
+
+            <TextView
+                android:id="@+id/text_app_strup_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/activity_using_detail_app_strup" />
+
+            <TextView
+                android:id="@+id/text_screen_lock_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/activity_using_detail_screen_lock" />
+
+            <TextView
+                android:id="@+id/text_screen_using_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/activity_using_detail_screen_using" />
         </LinearLayout>
+
         <ListView
             android:id="@+id/list_using_apps"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="11"
+            android:layout_weight="9"
             android:visibility="visible">
 
         </ListView>
 
         <LinearLayout
-            android:layout_weight="11"
             android:id="@+id/ll_using_app_list_empty"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_weight="9"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">

@@ -88,6 +88,8 @@ public class UsingDetailAdapter extends BaseAdapter {
         TextView textUsingTime;
         TextView textUsingAppNumber;
         TextView textUsingAppStrup;
+        TextView textScreenLock;
+        TextView textScreenUsing;
 
         /**
          * 构造方法，获得布局中各个视图的引用
@@ -98,6 +100,8 @@ public class UsingDetailAdapter extends BaseAdapter {
             textUsingTime = (TextView) v.findViewById(R.id.tex_time);
             textUsingAppNumber = (TextView) v.findViewById(R.id.text_app_number);
             textUsingAppStrup = (TextView) v.findViewById(R.id.text_app_strup);
+            textScreenLock = (TextView) v.findViewById(R.id.text_screen_lock);
+            textScreenUsing = (TextView) v.findViewById(R.id.text_screen_using);
         }
 
         /**
@@ -109,6 +113,8 @@ public class UsingDetailAdapter extends BaseAdapter {
             textUsingTime.setText(appInfo.getTime());
             textUsingAppNumber.setText(String.valueOf(appInfo.getAppNumber()));
             textUsingAppStrup.setText(String.valueOf(appInfo.getAppStrupNumber()));
+            textScreenLock.setText(String.valueOf(appInfo.getScreenOff()));
+            textScreenUsing.setText(String.valueOf(appInfo.getUseTime()));
         }
 
     }

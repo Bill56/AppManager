@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bill56.appmanager.entity.DatetimeApp;
+import com.bill56.appmanager.entity.DatetimeScreen;
 import com.bill56.appmanager.util.LogUtil;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class AppManagerDB {
             values.put("number", datetimeApp.getNumber());
             values.put("appName", datetimeApp.getAppName());
             db.insert("DATETIME_APP", null, values);
-            LogUtil.i(LogUtil.TAG,datetimeApp.getDate() + " " + datetimeApp.getTime() + " , 次数:" + datetimeApp.getNumber()  + " name :" +datetimeApp.getAppName() + "插入成功");
+            LogUtil.i(LogUtil.TAG, datetimeApp.getDate() + " " + datetimeApp.getTime() + " , 次数:" + datetimeApp.getNumber() + " name :" + datetimeApp.getAppName() + "插入成功");
         }
     }
 
@@ -80,7 +81,7 @@ public class AppManagerDB {
     public ArrayList<DatetimeApp> loadDatetimeAppByDate(String date) {
         ArrayList<DatetimeApp> list = new ArrayList<>();
         // 指定查询的条件
-        Cursor cursor = db.query("DATETIME_APP",null,"date=?",new String[]{date},null,null,null,null);
+        Cursor cursor = db.query("DATETIME_APP", null, "date=?", new String[]{date}, null, null, "id desc", null);
         // Cursor cursor = db.query("DATETIME_APP",null,null,null,null,null,null,null);
         // 查到数据
         if (cursor.moveToFirst()) {
@@ -93,7 +94,7 @@ public class AppManagerDB {
                 datetimeApp.setNumber(cursor.getInt(cursor.getColumnIndex("number")));
                 datetimeApp.setAppName(cursor.getString(cursor.getColumnIndex("appName")));
                 list.add(datetimeApp);
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         if (cursor != null) {
             cursor.close();
@@ -101,5 +102,145 @@ public class AppManagerDB {
         return list;
     }
 
+    /**
+     * 从数据库获取对应日期的app使用情况
+     *
+     * @param date    日期
+     * @param time    时间
+     * @param appName 应用名称
+     * @return 数据
+     */
+    public DatetimeApp loadDatetimeAppByDateTimeAndAppname(String date, String time, String appName) {
+        DatetimeApp datetimeApp = new DatetimeApp();
+        // 指定查询的条件
+        Cursor cursor = db.query("DATETIME_APP", null, "date=? and time=? and appName=?", new String[]{date, time, appName}, null, null, "id desc", null);
+        // Cursor cursor = db.query("DATETIME_APP",null,null,null,null,null,null,null);
+        // 查到数据
+        if (cursor.moveToFirst()) {
+            // 将数据封装
+            datetimeApp.setId(cursor.getInt(cursor.getColumnIndex("id")));
+            datetimeApp.setDate(date);
+            datetimeApp.setTime(time);
+            datetimeApp.setNumber(cursor.getInt(cursor.getColumnIndex("number")));
+            datetimeApp.setAppName(appName);
+        } else {
+            // 没有找到，返回Null
+            datetimeApp = null;
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return datetimeApp;
+    }
+
+    /**
+     * 根据日期和时间修改app的使用次数
+     *
+     * @param datetimeApp 封装了待修改数据的对象
+     */
+    public void updateDatetimeAppByDateTimeAndAppname(DatetimeApp datetimeApp) {
+        if (datetimeApp != null) {
+            ContentValues values = new ContentValues();
+            values.put("number", datetimeApp.getNumber());
+            // 更新数据
+            db.update("DATETIME_APP", values, "date=? and time=? and appName=?",
+                    new String[]{datetimeApp.getDate(), datetimeApp.getTime(),datetimeApp.getAppName()});
+            LogUtil.i(LogUtil.TAG, datetimeApp.getDate() + " " + datetimeApp.getTime() + " , 次数:" + datetimeApp.getNumber() + " 名称 :" + datetimeApp.getAppName() + "修改成功");
+        }
+    }
+
+    /**
+     * 将DatetimeScreen实例保存到数据库
+     *
+     * @param datetimeScreen 待保存的实例
+     */
+    public void saveDatetimeScreen(DatetimeScreen datetimeScreen) {
+        if (datetimeScreen != null) {
+            ContentValues values = new ContentValues();
+            values.put("date", datetimeScreen.getDate());
+            values.put("time", datetimeScreen.getTime());
+            values.put("screenTime", datetimeScreen.getScreenTime());
+            values.put("useTime", datetimeScreen.getUseTime());
+            db.insert("DATETIME_SCREEN", null, values);
+            LogUtil.i(LogUtil.TAG, datetimeScreen.getDate() + " " + datetimeScreen.getTime() + " , 次数:" + datetimeScreen.getScreenTime() + " 时间 :" + datetimeScreen.getUseTime() + "插入成功");
+        }
+    }
+
+    /**
+     * 从数据库获取对应日期的所有时段的屏幕解锁和手机使用情况
+     *
+     * @param date 日期
+     * @return 数据列表
+     */
+    public ArrayList<DatetimeScreen> loadDatetimeScreenByDate(String date) {
+        ArrayList<DatetimeScreen> list = new ArrayList<>();
+        // 指定查询的条件
+        Cursor cursor = db.query("DATETIME_SCREEN", null, "date=?", new String[]{date}, null, null, "id desc", null);
+        // Cursor cursor = db.query("DATETIME_APP",null,null,null,null,null,null,null);
+        // 查到数据
+        if (cursor.moveToFirst()) {
+            do {
+                DatetimeScreen datetimeScreen = new DatetimeScreen();
+                // 将数据封装
+                datetimeScreen.setId(cursor.getInt(cursor.getColumnIndex("id")));
+                datetimeScreen.setDate(date);
+                datetimeScreen.setTime(cursor.getString(cursor.getColumnIndex("time")));
+                datetimeScreen.setScreenTime(cursor.getInt(cursor.getColumnIndex("screenTime")));
+                datetimeScreen.setUseTime(cursor.getInt(cursor.getColumnIndex("useTime")));
+                list.add(datetimeScreen);
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return list;
+    }
+
+    /**
+     * 从数据库获取对应日期时间的时段的屏幕解锁和手机使用情况
+     *
+     * @param date 日期
+     * @param time 时间
+     * @return 数据对象
+     */
+    public DatetimeScreen loadDatetimeScreenByDateTime(String date, String time) {
+        DatetimeScreen datetimeScreen = new DatetimeScreen();
+        // 指定查询的条件
+        Cursor cursor = db.query("DATETIME_SCREEN", null, "date=? and time=?", new String[]{date, time}, null, null, "id desc", null);
+        // Cursor cursor = db.query("DATETIME_APP",null,null,null,null,null,null,null);
+        // 查到数据
+        if (cursor.moveToFirst()) {
+            // 将数据封装
+            datetimeScreen.setId(cursor.getInt(cursor.getColumnIndex("id")));
+            datetimeScreen.setDate(date);
+            datetimeScreen.setTime(cursor.getString(cursor.getColumnIndex("time")));
+            datetimeScreen.setScreenTime(cursor.getInt(cursor.getColumnIndex("screenTime")));
+            datetimeScreen.setUseTime(cursor.getInt(cursor.getColumnIndex("useTime")));
+        } else {
+            // 没有找到返回null
+            datetimeScreen = null;
+        }
+        if (cursor != null) {
+            cursor.close();
+        }
+        return datetimeScreen;
+    }
+
+    /**
+     * 根据日期和时间修改手机的锁屏次数和使用时长
+     *
+     * @param datetimeScreen 封装了待修改数据的对象
+     */
+    public void updateDatetimeScreenByDateTime(DatetimeScreen datetimeScreen) {
+        if (datetimeScreen != null) {
+            ContentValues values = new ContentValues();
+            values.put("screenTime", datetimeScreen.getScreenTime());
+            values.put("useTime", datetimeScreen.getUseTime());
+            // 更新数据
+            db.update("DATETIME_SCREEN", values, "date=? and time=?",
+                    new String[]{datetimeScreen.getDate(), datetimeScreen.getTime()});
+            LogUtil.i(LogUtil.TAG, datetimeScreen.getDate() + " " + datetimeScreen.getTime() + " , 次数:" + datetimeScreen.getScreenTime() + " 时间 :" + datetimeScreen.getUseTime() + "修改成功");
+        }
+    }
 
 }

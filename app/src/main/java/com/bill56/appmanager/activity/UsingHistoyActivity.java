@@ -1,5 +1,6 @@
 package com.bill56.appmanager.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.CalendarView;
 import com.bill56.appmanager.R;
 import com.bill56.appmanager.dao.AppManagerDB;
 import com.bill56.appmanager.entity.DatetimeApp;
+import com.bill56.appmanager.entity.DatetimeScreen;
 import com.bill56.appmanager.service.LongRunningService;
 import com.bill56.appmanager.util.LogUtil;
 import com.bill56.appmanager.util.ToastUtil;
@@ -55,15 +57,21 @@ public class UsingHistoyActivity extends BaseActivity {
         calendarUsing.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                showProgressDialog();
                 // 查询数据库
                 String date = String.format("%d-%02d-%02d", year, month + 1, dayOfMonth);
                 ToastUtil.show(UsingHistoyActivity.this, date);
+                // 获取app使用记录
                 ArrayList<DatetimeApp> usingApps = appManagerDB.loadDatetimeAppByDate(date);
+                // 获取手机使用时长和锁屏记录
+                ArrayList<DatetimeScreen> usingScreens = appManagerDB.loadDatetimeScreenByDate(date);
                 // 查询成功
+                dissmissProgressDialog();
                 // 将数据传递给详情页
-                Intent i = new Intent(UsingHistoyActivity.this,UsingDetailActivity.class);
-                i.putExtra("USING_APPS",usingApps);
-                i.putExtra("USING_DATE",date);
+                Intent i = new Intent(UsingHistoyActivity.this, UsingDetailActivity.class);
+                i.putExtra("USING_APPS", usingApps);
+                i.putExtra("USING_SCREENS", usingScreens);
+                i.putExtra("USING_DATE", date);
                 startActivity(i);
             }
         });
@@ -91,4 +99,30 @@ public class UsingHistoyActivity extends BaseActivity {
         }
         return true;
     }
+
+    // 显示加载的对话框
+    ProgressDialog progDialog;
+
+    /**
+     * 显示进度框
+     */
+    private void showProgressDialog() {
+        if (progDialog == null)
+            progDialog = new ProgressDialog(this);
+        progDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progDialog.setIndeterminate(false);
+        progDialog.setCancelable(false);
+        progDialog.setMessage(getString(R.string.activity_main_waiting));
+        progDialog.show();
+    }
+
+    /**
+     * 隐藏进度框
+     */
+    private void dissmissProgressDialog() {
+        if (progDialog != null) {
+            progDialog.dismiss();
+        }
+    }
+
 }

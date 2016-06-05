@@ -5,26 +5,42 @@
     android:orientation="horizontal">
 
     <TextView
+        android:id="@+id/tex_time"
         android:layout_width="0dp"
-        android:gravity="center"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/activity_using_detail_time"
-        android:id="@+id/tex_time" />
+        android:gravity="left|center_vertical"
+        android:text="@string/activity_using_detail_time" />
 
     <TextView
-        android:gravity="center"
+        android:id="@+id/text_app_number"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="@string/activity_using_detail_app_number"
-        android:id="@+id/text_app_number" />
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/activity_using_detail_app_number" />
 
     <TextView
+        android:id="@+id/text_app_strup"
         android:layout_width="0dp"
-        android:gravity="center"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="@string/activity_using_detail_app_strup"
-        android:id="@+id/text_app_strup" />
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/activity_using_detail_app_strup" />
+
+    <TextView
+        android:id="@+id/text_screen_lock"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/activity_using_detail_screen_lock" />
+
+    <TextView
+        android:id="@+id/text_screen_using"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="@string/activity_using_detail_screen_using" />
 </LinearLayout>

@@ -20,6 +20,16 @@ public class AppManagerOpenHelper extends SQLiteOpenHelper {
             "appName text)";        // 对应的某一个app
 
     /**
+     * 创建时间段内解锁次数和手机使用时间数据表的语句
+     */
+    public static final String CREATE_DATETIME_SCREEN = "create table DATETIME_SCREEN (" +
+            "id integer primary key autoincrement," +  //id
+            "date text," +                             // 日期
+            "time text," +                             // 时间
+            "screenTime integer," +                    // 锁屏次数
+            "useTime integer)";                        // 使用时间，即屏幕亮着与锁屏的时间差之和，单位秒
+
+    /**
      * 构造方法
      *
      * @param context 上下文换将
@@ -39,6 +49,7 @@ public class AppManagerOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_DATETIME_APP);
+        db.execSQL(CREATE_DATETIME_SCREEN);
     }
 
     /**

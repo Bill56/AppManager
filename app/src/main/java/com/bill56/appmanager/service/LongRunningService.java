@@ -20,7 +20,6 @@ import com.bill56.appmanager.util.DateTimeUtil;
 import com.bill56.appmanager.util.LogUtil;
 import com.bill56.appmanager.util.Utility;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;

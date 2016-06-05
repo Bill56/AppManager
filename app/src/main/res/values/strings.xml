@@ -26,4 +26,6 @@
     <string name="activity_using_detail_app_number">Using App Number</string>
     <string name="activity_using_detail_app_strup">App Strup Time</string>
     <string name="activity_using_history_option_recent">RecentDays</string>
+    <string name="activity_using_detail_screen_lock">Screen Locks</string>
+    <string name="activity_using_detail_screen_using">Using Time</string>
 </resources>
