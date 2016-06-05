@@ -23,6 +23,7 @@ import com.bill56.appmanager.fragment.AppAllFragment;
 import com.bill56.appmanager.fragment.AppRunningFragment;
 import com.bill56.appmanager.fragment.BaseFragment;
 import com.bill56.appmanager.service.LongRunningService;
+import com.bill56.appmanager.service.WatchAppService;
 import com.bill56.appmanager.util.LogUtil;
 import com.bill56.appmanager.util.ToastUtil;
 
@@ -66,6 +67,10 @@ public class MainActivity extends BaseActivity {
         // 注册屏幕监听广播
         screenActionReceiver = ScreenActionReceiver.getInstance();
         screenActionReceiver.registerScreenActionReceiver(this);
+        // 启动加密监听服务
+        //开启监听服务
+        Intent intentService = new Intent(this,WatchAppService.class);
+        startService(intentService);
     }
 
     /**

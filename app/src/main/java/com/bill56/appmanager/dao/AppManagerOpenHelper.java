@@ -29,6 +29,13 @@ public class AppManagerOpenHelper extends SQLiteOpenHelper {
             "screenTime integer," +                    // 锁屏次数
             "useTime integer)";                        // 使用时间，即屏幕亮着与锁屏的时间差之和，单位秒
 
+    private static String CREATE_BLACKNAME_TABLE_SQL = "create table blacknumber "
+            + "(_id integer primary key autoincrement, "
+            + "number varchar(20))";
+    private static String CREATE_APPLOCK_TABLE_SQL = "create table applock "
+            + "(_id integer primary key autoincrement, "
+            + "packagename varchar(30))";
+
     /**
      * 构造方法
      *
@@ -61,7 +68,8 @@ public class AppManagerOpenHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        db.execSQL(CREATE_BLACKNAME_TABLE_SQL);
+        db.execSQL(CREATE_APPLOCK_TABLE_SQL);
     }
 
 }

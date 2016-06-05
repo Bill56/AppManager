@@ -2,29 +2,39 @@ package com.bill56.appmanager.adapter;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.bill56.appmanager.R;
+import com.bill56.appmanager.dao.AppManagerDB;
 import com.bill56.appmanager.entity.AppInfo;
+import com.bill56.appmanager.service.LongRunningService;
+import com.bill56.appmanager.service.WatchAppService;
 import com.bill56.appmanager.util.AppUtil;
 import com.bill56.appmanager.util.DateTimeUtil;
 import com.bill56.appmanager.util.LogUtil;
 import com.bill56.appmanager.util.ToastUtil;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -39,6 +49,19 @@ public class AppInfoAdapter extends BaseAdapter {
     private List<AppInfo> mData;
     // 加载布局的对象
     private LayoutInflater inflater;
+    // 内部存储
+    private SharedPreferences preferencesPwd;
+    // 创建数据库操作对象
+    private AppManagerDB appManagerDB;
+    // 加锁需要的控件
+    private EditText etPwd1;
+    private EditText etPwd2;
+    private EditText etOldPwd;
+    private EditText etNewPwd1;
+    private EditText etNewPwd2;
+    private View viewSetPwd;
+    private View viewChangePwd;
+    private SharedPreferences.Editor editor;
 
     /**
      * 构造方法
@@ -51,6 +74,7 @@ public class AppInfoAdapter extends BaseAdapter {
         this.mData = data;
         // 加载布局的服务对象
         inflater = LayoutInflater.from(context);
+        appManagerDB = LongRunningService.appManagerDB;
     }
 
     /**
@@ -276,7 +300,29 @@ public class AppInfoAdapter extends BaseAdapter {
          * 处理点击加锁菜单后的方法
          */
         private void doLock() {
-
+            //设置密码页面控件
+            viewSetPwd = inflater.inflate(R.layout.set_pwd,null);
+            etPwd1 = (EditText) viewSetPwd.findViewById(R.id.et_pwd1);
+            etPwd2 = (EditText) viewSetPwd.findViewById(R.id.et_pwd2);
+            viewChangePwd = inflater.inflate(R.layout.change_pwd, null);
+            etOldPwd = (EditText) viewChangePwd.findViewById(R.id.et_old_pwd);
+            etNewPwd1 = (EditText) viewChangePwd.findViewById(R.id.et_new_pwd1);
+            etNewPwd2 = (EditText) viewChangePwd.findViewById(R.id.et_new_pwd2);
+            preferencesPwd = mContext.getSharedPreferences("passWord", mContext.MODE_PRIVATE);
+            editor = preferencesPwd.edit();
+            String itemPackageName = appInfo.getAppPackageName();
+            String pwd = preferencesPwd.getString("pwd", "");
+            if (/*tv_app_lock.getText().equals("加锁")*/true) {
+                if (TextUtils.isEmpty(pwd)) {
+                    setPassWord(itemPackageName);
+                } else {
+                    appManagerDB.add(itemPackageName);
+                    ToastUtil.show(mContext, R.string.frag_adapter_lock_success);
+                }
+            } else if (/*tv_app_lock.getText().equals("解锁")*/false) {
+                unLock(itemPackageName);
+            }
+            notifyDataSetChanged();
         }
 
         /**
@@ -312,6 +358,168 @@ public class AppInfoAdapter extends BaseAdapter {
                 mData.remove(appInfo);
                 notifyDataSetChanged();
             }
+        }
+
+        /**
+         * 解锁的方法
+         *
+         * @param packageName 应用程序包名
+         */
+        public void unLock(final String packageName) {
+            final EditText pwd = new EditText(mContext);
+            pwd.setHint(R.string.frag_input_pwd);
+            pwd.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            new AlertDialog.Builder(mContext).setTitle(R.string.frag_input_pwd_avlidate).setIcon(
+                    R.drawable.ic_setting_pwd).setView(
+                    pwd).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+                    String stringPwd = preferencesPwd.getString("pwd", "");
+                    if (TextUtils.isEmpty(pwd.getText().toString())) {
+                        boolean isVisible = false;
+                        dialogView(dialog, isVisible);
+                        ToastUtil.show(mContext, R.string.frag_input_pwd);
+                    } else if ((pwd.getText().toString()).equals(stringPwd)) {
+                        appManagerDB.delete(packageName);
+                        boolean isVisible = true;
+                        dialogView(dialog, isVisible);
+                        ToastUtil.show(mContext, R.string.frag_adapter_unlock_success);
+                    } else {
+                        boolean isVisible = false;
+                        dialogView(dialog, isVisible);
+                        ToastUtil.show(mContext, R.string.lock_pwd_error);
+                    }
+                }
+            })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO Auto-generated method stub
+                            boolean isVisible = true;
+                            dialogView(dialog, isVisible);
+                        }
+                    }).show();
+        }
+
+        /**
+         * 功能：第一次加锁设置密码
+         *
+         * @param itemPackageName
+         */
+        public void setPassWord(final String itemPackageName) {
+            new AlertDialog.Builder(mContext).setTitle("设置安全锁密钥").setIcon(R.drawable.ic_setting_pwd)
+                    .setView(viewSetPwd)
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO Auto-generated method stub
+                            if ((etPwd1.getText().toString()).equals(etPwd2.getText().toString())) {
+                                if (TextUtils.isEmpty(etPwd1.getText().toString()) | TextUtils.isEmpty(etPwd2.getText().toString())) {
+                                    ToastUtil.show(mContext,R.string.lock_pwd_empty);
+                                    boolean isVisible = false;
+                                    dialogView(dialog, isVisible);
+                                } else {
+                                    editor.putString("pwd", etPwd1.getText().toString());
+                                    editor.commit();
+                                    appManagerDB.add(itemPackageName);
+                                    ToastUtil.show(mContext, "密码设置成功");
+                                    ToastUtil.show(mContext,R.string.frag_adapter_lock_success);
+                                    boolean isVisible = true;
+                                    dialogView(dialog, isVisible);
+                                }
+                            } else {
+                                etPwd1.setText("");
+                                etPwd2.setText("");
+                                ToastUtil.show(mContext,R.string.frag_input_pwd_nomatch);
+                                boolean isVisible = false;
+                                dialogView(dialog, isVisible);
+                            }
+                        }
+                    })
+                    .setNeutralButton(R.string.input_button_reset, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO Auto-generated method stub
+                            etPwd1.setText("");
+                            etPwd2.setText("");
+                            boolean isVisible = false;
+                            dialogView(dialog, isVisible);
+                        }
+                    })
+                    .setNegativeButton(R.string.input_button_cancel, new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO Auto-generated method stub
+                            boolean isVisible = true;
+                            dialogView(dialog, isVisible);
+                        }
+                    })
+                    .create().show();
+        }
+
+        /**
+         * 功能：控制popupwindow对话框消失与显示
+         *
+         * @param dialog
+         * @param isVisible
+         */
+        public void dialogView(DialogInterface dialog, boolean isVisible) {
+            try {
+                //实现点击重置对话框不消失
+                Field field;
+                field = dialog.getClass().getSuperclass().getDeclaredField("mShowing");
+                field.setAccessible(true);
+                //设置mShowing值，欺骗android系统
+                field.set(dialog, isVisible);  //需要关闭的时候将这个参数设置为true 他就会自动关闭了
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        /**
+         * 功能：重置密码
+         */
+        public void changePwd() {
+            new AlertDialog.Builder(mContext).setTitle("密码设置").setView(viewChangePwd).
+                    setIcon(R.drawable.ic_setting_pwd).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+                    String stringPwd = preferencesPwd.getString("pwd", "");
+                    if ((etOldPwd.getText().toString()).equals(stringPwd)) {
+                        if ((etNewPwd1.getText().toString()).equals(etNewPwd2.getText().toString())) {
+                            editor.putString("pwd", etNewPwd1.getText().toString());
+                            editor.commit();
+                            ToastUtil.show(mContext,"密码重置成功");
+                            boolean isVisible = true;
+                            dialogView(dialog, isVisible);
+                        } else {
+                            etNewPwd1.setText("");
+                            etNewPwd2.setText("");
+                            boolean isVisible = false;
+                            dialogView(dialog, isVisible);
+                            ToastUtil.show(mContext,R.string.frag_input_pwd_nomatch);
+                        }
+                    } else {
+                        boolean isVisible = false;
+                        dialogView(dialog, isVisible);
+                        ToastUtil.show(mContext,"原始密码错误");
+                    }
+                }
+            })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // TODO Auto-generated method stub
+                            boolean isVisible = true;
+                            dialogView(dialog, isVisible);
+                        }
+                    }).show();
         }
 
     }

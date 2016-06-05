@@ -26,11 +26,14 @@ public class AppManagerDB {
     /**
      * 数据库版本号
      */
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
 
     private static AppManagerDB appManagerDB;
 
     private SQLiteDatabase db;
+
+    private static AppManagerDB instance;
+
 
     /**
      * 运用单例模式将构造方法私有化
@@ -40,6 +43,7 @@ public class AppManagerDB {
     private AppManagerDB(Context context) {
         AppManagerOpenHelper dbHelper = new AppManagerOpenHelper(context, DB_NAME, null, VERSION);
         db = dbHelper.getWritableDatabase();
+        instance = this;
     }
 
     /**
@@ -144,7 +148,7 @@ public class AppManagerDB {
             values.put("number", datetimeApp.getNumber());
             // 更新数据
             db.update("DATETIME_APP", values, "date=? and time=? and appName=?",
-                    new String[]{datetimeApp.getDate(), datetimeApp.getTime(),datetimeApp.getAppName()});
+                    new String[]{datetimeApp.getDate(), datetimeApp.getTime(), datetimeApp.getAppName()});
             LogUtil.i(LogUtil.TAG, datetimeApp.getDate() + " " + datetimeApp.getTime() + " , 次数:" + datetimeApp.getNumber() + " 名称 :" + datetimeApp.getAppName() + "修改成功");
         }
     }
@@ -241,6 +245,68 @@ public class AppManagerDB {
                     new String[]{datetimeScreen.getDate(), datetimeScreen.getTime()});
             LogUtil.i(LogUtil.TAG, datetimeScreen.getDate() + " " + datetimeScreen.getTime() + " , 次数:" + datetimeScreen.getScreenTime() + " 时间 :" + datetimeScreen.getUseTime() + "修改成功");
         }
+    }
+
+    /**
+     * 在数据库中查找包名的方法
+     *
+     * @param packageName 包名
+     * @return 是否查到
+     */
+    public boolean find(String packageName) {
+        boolean result = false;
+        Cursor cursor = db.query("applock",null,"packagename=?",new String[]{packageName},null,null,null);
+        if (cursor.moveToNext()) {
+            result = true;
+        }
+        cursor.close();
+        LogUtil.i(LogUtil.TAG,String.valueOf(result));
+        return result;
+    }
+
+    /**
+     * 向数据库添加加锁的程序
+     *
+     * @param packageName 程序包名
+     */
+    public void add(String packageName) {
+        if (find(packageName)) {
+            return;
+        }
+        db.execSQL("insert into applock (packagename) values (?)",
+                new String[]{packageName});
+
+    }
+
+    /**
+     * 删除加锁的程序
+     *
+     * @param packageName 程序包名
+     */
+
+    public void delete(String packageName) {
+        if (db.isOpen()) {
+            db.execSQL("delete from applock where packagename = ? ",
+                    new Object[]{packageName});
+        }
+    }
+
+    /**
+     * 获得所有的加锁的程序包名
+     *
+     * @return 程序包名列表
+     */
+    public List<String> getAllPackageName() {
+        List<String> packageNames = new ArrayList<String>();
+        if (db.isOpen()) {
+            Cursor cursor = db.rawQuery("select packagename from applock", null);
+            while (cursor.moveToNext()) {
+                String packageName = cursor.getString(0);
+                packageNames.add(packageName);
+            }
+            cursor.close();
+        }
+        return packageNames;
     }
 
 }

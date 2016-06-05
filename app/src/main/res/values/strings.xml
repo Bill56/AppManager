@@ -38,4 +38,17 @@
     <string name="frag_adapter_share_title">Share</string>
     <string name="frag_adapter_share_front">It is a good app here,let me introduce it to you:</string>
     <string name="frag_adapter_share_behind">The message was from AppManager</string>
+    <string name="keybord_clear">Clear</string>
+    <string name="input_pwd_edit">Input Password</string>
+    <string name="input_button_ok">OK</string>
+    <string name="lock_pwd_empty">Password should\'t be empty</string>
+    <string name="lock_pwd_error">Password Error</string>
+    <string name="frag_adapter_lock_success">Lock Success.</string>
+    <string name="frag_input_pwd">Please input the password.</string>
+    <string name="frag_input_pwd_avlidate">Password invalidate。</string>
+    <string name="frag_adapter_unlock_success">Unlock Succuess.</string>
+    <string name="frag_input_pwd_again">Please input the password again</string>
+    <string name="frag_input_pwd_nomatch">Twince passord isn\'t match.</string>
+    <string name="input_button_reset">Reset</string>
+    <string name="input_button_cancel">Cancel</string>
 </resources>
