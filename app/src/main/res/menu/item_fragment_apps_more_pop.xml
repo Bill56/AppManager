@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--菜单项-->
+    <item
+        android:id="@+id/action_run"
+        android:title="@string/frag_app_more_run" />
+    <item
+        android:id="@+id/action_lock"
+        android:title="@string/frag_app_more_lock" />
+    <item
+        android:id="@+id/action_share"
+        android:title="@string/frag_app_more_share" />
+    <item
+        android:id="@+id/action_unload"
+        android:title="@string/frag_app_unload" />
+</menu>

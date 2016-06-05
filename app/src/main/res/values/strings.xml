@@ -28,4 +28,14 @@
     <string name="activity_using_history_option_recent">RecentDays</string>
     <string name="activity_using_detail_screen_lock">Screen Locks</string>
     <string name="activity_using_detail_screen_using">Using Time</string>
+    <string name="frag_app_more_run">Run</string>
+    <string name="frag_app_more_lock">Lock</string>
+    <string name="frag_app_unload">Unload</string>
+    <string name="frag_adapter_run_fail">Sorry,Run fail</string>
+    <string name="frag_adapter_no_run">Sorry,app mustn\'t start</string>
+    <string name="frag_adapter_system_unload_fail">Can\'t unload system application.</string>
+    <string name="frag_app_more_share">Share</string>
+    <string name="frag_adapter_share_title">Share</string>
+    <string name="frag_adapter_share_front">It is a good app here,let me introduce it to you:</string>
+    <string name="frag_adapter_share_behind">The message was from AppManager</string>
 </resources>

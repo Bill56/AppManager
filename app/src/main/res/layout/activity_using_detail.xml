@@ -50,6 +50,7 @@
 
             <TextView
                 android:id="@+id/tex_time_desc"
+                android:textSize="18sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -59,6 +60,7 @@
             <TextView
                 android:id="@+id/text_app_number_desc"
                 android:layout_width="0dp"
+                android:textSize="18sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -67,6 +69,7 @@
             <TextView
                 android:id="@+id/text_app_strup_desc"
                 android:layout_width="0dp"
+                android:textSize="18sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -75,6 +78,7 @@
             <TextView
                 android:id="@+id/text_screen_lock_desc"
                 android:layout_width="0dp"
+                android:textSize="18sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -84,6 +88,7 @@
                 android:id="@+id/text_screen_using_desc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textSize="18sp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/activity_using_detail_screen_using" />
@@ -94,6 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="9"
+            android:dividerHeight="2dp"
             android:visibility="visible">
 
         </ListView>

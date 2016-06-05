@@ -13,16 +13,31 @@
         android:layout_alignParentTop="true"
         android:src="@drawable/ic_directions_car_24dp" />
 
-    <TextView
-        android:id="@+id/text_app_use_time"
+    <LinearLayout
+        android:id="@+id/ll_right"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignBottom="@+id/linearLayout"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center"
-        android:text="01:01:23"
-        android:textSize="18sp" />
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/text_app_use_time"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="01:01:23"
+            android:textSize="18sp" />
+
+        <ImageButton
+            android:id="@+id/imgBtn_more"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_more_vert_24dp"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless.Small" />
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -30,10 +45,10 @@
         android:layout_height="match_parent"
         android:layout_alignBottom="@+id/image_app_icon"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/image_app_icon"
-        android:layout_toStartOf="@+id/text_app_use_time"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_toEndOf="@+id/image_app_icon"
+        android:layout_toStartOf="@+id/ll_right"
         android:orientation="vertical">
 
         <TextView
@@ -41,18 +56,18 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:textSize="22sp"
-            android:textStyle="bold"
             android:gravity="center_vertical"
-            android:text="@string/item_app_name_hint" />
+            android:text="@string/item_app_name_hint"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/text_app_size"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:textSize="18sp"
             android:gravity="center_vertical"
-            android:text="@string/item_app_size_hint" />
+            android:text="@string/item_app_size_hint"
+            android:textSize="18sp" />
     </LinearLayout>
 </RelativeLayout>
