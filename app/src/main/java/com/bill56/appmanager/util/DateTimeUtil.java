@@ -27,6 +27,22 @@ public class DateTimeUtil {
     }
 
     /**
+     * 将时间转成时间格式，只显示当前时段
+     *
+     * @param mills 毫秒
+     * @return 对应的字符串
+     */
+    public static String DateToTimeFieldString(long mills) {
+        Date date = new Date(mills);
+        // 获得当前的小时
+        int hour = date.getHours();
+        if (hour > 0)
+            return String.format("%02d:00-%02d:00", hour - 1, hour);
+        else
+            return String.format("%02d:00-%02d:00", 23, hour);
+    }
+
+    /**
      * 将时间转成日期格式，只显示年月日
      *
      * @param mills 毫秒

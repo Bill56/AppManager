@@ -22,4 +22,8 @@
     <string name="app_minutes">minute</string>
     <string name="app_second">scond</string>
     <string name="frag_adapter_error">Get Error</string>
+    <string name="activity_using_detail_time">Betwin Time</string>
+    <string name="activity_using_detail_app_number">Using App Number</string>
+    <string name="activity_using_detail_app_strup">App Strup Time</string>
+    <string name="activity_using_history_option_recent">RecentDays</string>
 </resources>

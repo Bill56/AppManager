@@ -23,6 +23,9 @@
         <activity android:name=".activity.UsingHistoyActivity">
 
         </activity>
+        <activity android:name=".activity.UsingDetailActivity">
+
+        </activity>
         <service android:name=".service.LongRunningService">
 
         </service>

@@ -1,9 +1,11 @@
 package com.bill56.appmanager.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by Bill56 on 2016/6/4.
  */
-public class DatetimeApp {
+public class DatetimeApp implements Serializable{
 
     // id
     private int id;

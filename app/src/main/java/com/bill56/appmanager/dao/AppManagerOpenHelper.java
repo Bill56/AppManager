@@ -14,9 +14,9 @@ public class AppManagerOpenHelper extends SQLiteOpenHelper {
      */
     public static final String CREATE_DATETIME_APP = "create table DATETIME_APP (" +
             "id integer primary key autoincrement," +   // id
-            "date text" +       // 日期
-            "time text" +       // 时间
-            "number integer" +  // 启动次数
+            "date text," +       // 日期
+            "time text," +       // 时间
+            "number integer," +  // 启动次数
             "appName text)";        // 对应的某一个app
 
     /**

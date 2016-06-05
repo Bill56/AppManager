@@ -17,6 +17,7 @@ import android.widget.ListView;
 
 import com.bill56.appmanager.R;
 import com.bill56.appmanager.adapter.AppInfoAdapter;
+import com.bill56.appmanager.broadcastreciever.ScreenActionReceiver;
 import com.bill56.appmanager.entity.AppInfo;
 import com.bill56.appmanager.fragment.AppAllFragment;
 import com.bill56.appmanager.fragment.AppRunningFragment;
@@ -50,8 +51,8 @@ public class MainActivity extends BaseActivity {
     private List<AppInfo> apps;
     // 设备安装程序的适配器
     private ListView appList;
-
-
+    // 监听屏幕锁屏的广播
+    private ScreenActionReceiver screenActionReceiver;
 
 
     @Override
@@ -60,7 +61,11 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         // 初始化导航
         initTab();
+        // 启动服务
         startService(new Intent(this, LongRunningService.class));
+        // 注册屏幕监听广播
+        screenActionReceiver = ScreenActionReceiver.getInstance();
+        screenActionReceiver.registerScreenActionReceiver(this);
     }
 
     /**
@@ -133,7 +138,7 @@ public class MainActivity extends BaseActivity {
             item.setChecked(true);
         }
         // 判断当前是哪个碎片
-        if (currentFragment instanceof  AppAllFragment) {
+        if (currentFragment instanceof AppAllFragment) {
             // 获得列表
             apps = AppAllFragment.getInstance().getAppData();
             // 获得应用列表
@@ -141,7 +146,7 @@ public class MainActivity extends BaseActivity {
         } else /*if (currentFragment instanceof AppRunningFragment)*/ {
             // 获得列表
             apps = AppRunningFragment.getInstance().getAppData();
-            LogUtil.d(LogUtil.TAG,apps == null?"null":"not null");
+            LogUtil.d(LogUtil.TAG, apps == null ? "null" : "not null");
             // 获得应用列表
             appList = AppRunningFragment.getInstance().getListApps();
         }
@@ -151,7 +156,7 @@ public class MainActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.action_use_history:
-                startActivity(new Intent(this,UsingHistoyActivity.class));
+                startActivity(new Intent(this, UsingHistoyActivity.class));
                 break;
             case R.id.action_sort_all:
                 doSortAll();
@@ -166,6 +171,13 @@ public class MainActivity extends BaseActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 销毁注册
+        screenActionReceiver.unRegisterScreenActionReceiver(this);
     }
 
     /**

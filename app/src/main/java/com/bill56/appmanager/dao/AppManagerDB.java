@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bill56.appmanager.entity.DatetimeApp;
+import com.bill56.appmanager.util.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,7 @@ public class AppManagerDB {
             values.put("number", datetimeApp.getNumber());
             values.put("appName", datetimeApp.getAppName());
             db.insert("DATETIME_APP", null, values);
+            LogUtil.i(LogUtil.TAG,datetimeApp.getDate() + " " + datetimeApp.getTime() + " , 次数:" + datetimeApp.getNumber()  + " name :" +datetimeApp.getAppName() + "插入成功");
         }
     }
 
@@ -75,10 +77,11 @@ public class AppManagerDB {
      * @param date 日期
      * @return 数据列表
      */
-    public List<DatetimeApp> loadDatetimeAppByDate(String date) {
-        List<DatetimeApp> list = new ArrayList<>();
+    public ArrayList<DatetimeApp> loadDatetimeAppByDate(String date) {
+        ArrayList<DatetimeApp> list = new ArrayList<>();
         // 指定查询的条件
         Cursor cursor = db.query("DATETIME_APP",null,"date=?",new String[]{date},null,null,null,null);
+        // Cursor cursor = db.query("DATETIME_APP",null,null,null,null,null,null,null);
         // 查到数据
         if (cursor.moveToFirst()) {
             do {

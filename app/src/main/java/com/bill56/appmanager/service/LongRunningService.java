@@ -14,9 +14,13 @@ import android.os.SystemClock;
 import android.support.annotation.Nullable;
 
 import com.bill56.appmanager.broadcastreciever.AlarmReceiver;
+import com.bill56.appmanager.dao.AppManagerDB;
 import com.bill56.appmanager.entity.AppInfo;
+import com.bill56.appmanager.util.DateTimeUtil;
 import com.bill56.appmanager.util.LogUtil;
+import com.bill56.appmanager.util.Utility;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -31,10 +35,19 @@ import java.util.Map;
  */
 public class LongRunningService extends Service {
 
+    // 数据库操作对象
+    public static AppManagerDB appManagerDB;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        appManagerDB = AppManagerDB.getInstance(this);
     }
 
     @Override
@@ -45,7 +58,13 @@ public class LongRunningService extends Service {
             public void run() {
                 LogUtil.i(LogUtil.TAG, "executed at " + new Date().toString());
                 // 读取正在运行的程序
-//                getRunningAppsInfo();
+                List<AppInfo> runningApps = getRunningAppsInfo();
+                // 获取当前的日期和时间
+                long recodeTime = System.currentTimeMillis();
+                String date = DateTimeUtil.DateToString(recodeTime);
+                String time = DateTimeUtil.DateToTimeFieldString(recodeTime);
+                Utility.handleAppRunningRecode(appManagerDB,runningApps,date,time);
+                LogUtil.i(LogUtil.TAG,date + " " + time);
             }
         }).start();
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -57,10 +76,10 @@ public class LongRunningService extends Service {
         int currentHour = currentDate.getHours();
         // 计算一下整点的时间
         Date date;
-        if (currentHour < 24) {
+        if (currentHour > 0) {
             date = new Date(currentDate.getYear(),currentDate.getMonth(),currentDate.getDate(),currentHour+1,0,0);
         } else {
-            date = new Date(currentDate.getYear(),currentDate.getMonth(),currentDate.getDate() + 1,1,0,0);
+            date = new Date(currentDate.getYear(),currentDate.getMonth(),currentDate.getDate(),1,0,0);
         }
         long nextTriggerTime = date.getTime();
         LogUtil.i(LogUtil.TAG,String.format("cur time : %s, next time : %s",String.valueOf(currentTime),String.valueOf(nextTriggerTime)));
@@ -103,7 +122,7 @@ public class LongRunningService extends Service {
                 String pkgName = pkgNameList[i];
                 // 加入至map对象里
                 pgkProcessAppMap.put(pkgName, appProcess);
-                LogUtil.i(LogUtil.TAG,"pkgName : " + pkgName);
+//                LogUtil.i(LogUtil.TAG,"pkgName : " + pkgName);
             }
         }
         // 保存所有正在运行的应用程序信息
